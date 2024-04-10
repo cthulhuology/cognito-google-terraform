@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>Login Test</title>
+</head>
+<body>
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <script>
+      function handleCredentialResponse(response) {
+	console.log(response)
+        console.log("Encoded JWT ID token: " + response.credential);
+      }
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id:"1017240804715-5kjapqa1d7gpcc7936emil0mtk0vqn6v.apps.googleusercontent.com",
+          callback: handleCredentialResponse
+        });
+        google.accounts.id.renderButton(
+          document.getElementById("buttonDiv"),
+          { theme: "outline", size: "large" }  // customization attributes
+        );
+        google.accounts.id.prompt(); // also display the One Tap dialog
+      }
+    </script>
+    <div id="buttonDiv"></div>
+</body>
+</html>

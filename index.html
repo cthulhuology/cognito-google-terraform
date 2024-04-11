@@ -3,15 +3,21 @@
 <title>Login Test</title>
 </head>
 <body>
+    <script src="cognito.js" async></script>
     <script src="https://accounts.google.com/gsi/client" async></script>
     <script>
-      function handleCredentialResponse(response) {
-	console.log(response)
+      const aws_region = 'us-east-1'
+      const cognito_identity_pool_id = 'PLEASE PUT YOUR IDENTITY POOL HERE'
+      const google_client_id = 'PLEASE PUT YOUR GOOGLE OAUTH ID HERE'
+      async function handleCredentialResponse(response) {
         console.log("Encoded JWT ID token: " + response.credential);
+	console.log("STS Credentials:")
+	const creds = await credentials(aws_region,cognito_identity_pool_id,'accounts.google.com',response.credential)
+	console.log(creds)
       }
       window.onload = function () {
         google.accounts.id.initialize({
-          client_id:"1017240804715-5kjapqa1d7gpcc7936emil0mtk0vqn6v.apps.googleusercontent.com",
+          client_id: google_client_id,
           callback: handleCredentialResponse
         });
         google.accounts.id.renderButton(

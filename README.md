@@ -37,6 +37,7 @@ How The Authentication Works
 ----------------------------
 
 ![Cognito enhanced simplified auth flow](https://docs.aws.amazon.com/images/cognito/latest/developerguide/images/amazon-cognito-ext-auth-enhanced-flow.png)
+
 The flow is the button logs into Google, and then returns a JWT following the OIDC protocol.  This
 token is then passed to Cognito to provision a new identifier if necessary (Cognito will validate 
 the JWT for you), and then requests AWS STS credentials using the Cognito identifier.  The STS

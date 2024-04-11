@@ -26,10 +26,10 @@
 //
 //
 
-async function getId(region,identityPoolId,provider,jwt) {
+async function cognito(region,call,params) {
 	const service = "cognito-identity"
 	const endpoint = "https://" + service + "." + region + ".amazonaws.com"
-	const target = "com.amazonaws.cognito.identity.model.AWSCognitoIdentityService.GetId"
+	const target = "com.amazonaws.cognito.identity.model.AWSCognitoIdentityService." + call
 	const method = "POST"
 	const xamzdate = (new Date()).toISOString().slice(0, 19).replace(/[^\dT]/g, "") + 'Z' // YYYYMMDDTHHMMSSZ
 	const headers = new Headers({
@@ -37,39 +37,31 @@ async function getId(region,identityPoolId,provider,jwt) {
 		"X-AMZ-TARGET": target,
 		"CONTENT-TYPE": "application/x-amz-json-1.1",
 	})
+		const body = JSON.stringify(params)
+	const req = new Request(endpoint, { method, headers, body })
+	const resp = await fetch(req)
+	return await resp.json()
+}
+
+async function getId(region,identityPoolId,provider,jwt) {
+	const call = "GetId"
 	const params = {
 		"IdentityPoolId": identityPoolId,
 		"Logins": {}
 	}
 	params.Logins[provider] = jwt
-	const body = JSON.stringify(params)
-	const req = new Request(endpoint, { method, headers, body })
-	const resp = await fetch(req)
-	const json = await resp.json()
+	const json = await cognito(region,call,params)
 	return json.IdentityId
 }
 
 async function getCredentialsForIdentity(region,identityId,provider,jwt) {
-	const service = "cognito-identity"
-	const endpoint = "https://" + service + "." + region + ".amazonaws.com"
-	const target = "com.amazonaws.cognito.identity.model.AWSCognitoIdentityService.GetCredentialsForIdentity"
-	const method = "POST"
-	const xamzdate = (new Date()).toISOString().slice(0, 19).replace(/[^\dT]/g, "") + 'Z' // YYYYMMDDTHHMMSSZ
-	const headers = new Headers({
-		"X-AMZ-DATE" : xamzdate,
-		"X-AMZ-TARGET": target,
-		"CONTENT-TYPE": "application/x-amz-json-1.1",
-	})
+	const call = "GetCredentialsForIdentity"
 	const params = {
 		"IdentityId": identityId,
 		"Logins": {}
 	}
 	params.Logins[provider] = jwt
-	const body = JSON.stringify(params)
-	const req = new Request(endpoint, { method, headers, body })
-	const resp = await fetch(req)
-	const json = await resp.json()
-	return json
+	return await cognito(region,call,params)
 }
 
 async function credentials(region,identityPoolId,provider,jwt) {

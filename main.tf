@@ -84,4 +84,6 @@ resource "aws_cognito_identity_pool_roles_attachment" "google" {
   }
 }
 
-
+output "cognito_identity_pool_id"  {
+  value = aws_cognito_identity_pool.google.id
+}

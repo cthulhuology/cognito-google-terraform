@@ -37,7 +37,7 @@ async function cognito(region,call,params) {
 		"X-AMZ-TARGET": target,
 		"CONTENT-TYPE": "application/x-amz-json-1.1",
 	})
-		const body = JSON.stringify(params)
+	const body = JSON.stringify(params)
 	const req = new Request(endpoint, { method, headers, body })
 	const resp = await fetch(req)
 	return await resp.json()
